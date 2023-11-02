@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Button
 import android.widget.ImageView
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,10 +14,10 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var cakeImageView: ImageView
 
-    val handler = Handler(Looper.getMainLooper(), Handler.Callback {
-        cakeImageView.alpha = it.what / 100f
-        true
-    })
+//    val handler = Handler(Looper.getMainLooper(), Handler.Callback {
+//        cakeImageView.alpha = it.what / 100f
+//        true
+//    })
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +26,20 @@ class MainActivity : AppCompatActivity() {
         cakeImageView = findViewById(R.id.imageView)
 
         findViewById<Button>(R.id.revealButton).setOnClickListener{
-            Thread{
+            CoroutineScope(Dispatchers.Default).launch{
                 repeat(100) {
-                    handler.sendEmptyMessage(it)
-                    Thread.sleep(40)
+                    cakeImageView.alpha = it / 100f
+                    delay(40)
                 }
-            }.start()
+            }
+
+
+//            Thread{
+//                repeat(100) {
+//                    handler.sendEmptyMessage(it)
+//                    Thread.sleep(40)
+//                }
+//            }.start()
         }
     }
 }
